@@ -1,23 +1,36 @@
+.SUFFIXES :
+.SUFFIXES : .temp .template
+
+TDIR := templates
+TSRC := temp
+TSUFF := template
+
+.temp.template :
+	cat ${TDIR}/custom.vars $< > $*.${TSUFF}
+
+TEMPLATES := ${TDIR}/application.${TSUFF} ${TDIR}/gen_fsm.${TSUFF}
+
+all : ${TEMPLATES}
+
 gc:
 	@echo -n 'Removing all emacs archive files... '
 	@rm -f *~
 	@rm -f */*~
 	@echo 'done'
 
-setup:
-	@echo -n 'Setting up deps/rebar-tools as a symbolic link for local testing... '
-	@mkdir -p deps
-	@[[ -s deps/rebar-tools ]] || ln -s ../.. deps/rebar-tools
-	@echo 'done'
-
-clean: gc clean_src clean_deps
+clean: gc clean_src clean_test clean_templates
 
 clean_src:
 	@echo -n 'Removing local generated source code... '
 	@rm -rf src
 	@echo 'done'
 
-clean_deps:
-	@echo -n 'Removing local testing deps/rebar-tools symbolic link... '
-	@rm -rf deps
+clean_test:
+	@echo -n 'Removing local generated test code... '
+	@rm -rf test
+	@echo 'done'
+
+clean_templates:
+	@echo -n 'Removing custom generated templates... '
+	@rm -f templates/*.template
 	@echo 'done'
