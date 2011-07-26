@@ -2,4 +2,5 @@
 */*~
 deps
 src
-
+test
+templates/*.template
