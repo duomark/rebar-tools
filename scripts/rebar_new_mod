@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# if [[ ! -d deps ]] || [[ ! -d deps/rebar-tools ]] || [[ ! -s deps/rebar-tools ]]; then
+#    echo "Run 'make setup' to experiment with local template generation"
+#    exit -1
+# fi
+
+# Create a new module using the rebar-tools templates
+#   $1 = module_name
+#   $2 = author_nick [jayn]
+#   $3 = optional template (default: module)
+
+if [[ $# == 1 && -z ${REBAR_AUTHOR_NICK} || $# != 3 && $# != 2 && $# != 1 ]]; then
+  echo
+  echo "Usage: $0 module_name [author_nick [template_module]]"
+  echo '  where module = atom to use as module name'
+  echo '  where author_nick = [ jayn ]'
+  echo '  where template_module = [ application | supervisor | gen_fsm | module ] and default is module'
+  echo
+  echo '  author_nick must be set in an ENV variable REBAR_AUTHOR_NICK if not provided on cmd line'
+
+  if [[ $# == 1 ]]; then
+    echo; echo "** Error: only one arg supplied and COSB_AUTHOR_NICK is not set"; echo
+  else
+    echo; echo "** Error: $# args supplied instead of 1, 2 or 3"; echo
+  fi
+  exit -1
+fi
+
+AUTHOR_NICK=${2:-${REBAR_AUTHOR_NICK}}
+TEMPLATE=${3:-module}
+
+case ${AUTHOR_NICK} in
+  guest)   AUTHOR="Guest <nobody@duomark.com>";;
+  jayn)    AUTHOR="Jay Nelson <jay@duomark.com>";;
+esac
+
+TEMPLATE_DIR=deps/rebar-tools/templates
+
+(
+  echo "Executing 'rebar create' from pwd: " `pwd` " ; template dir: $TEMPLATE_DIR ; template: $TEMPLATE"
+  rebar -v create template=${TEMPLATE} module_name=${1} author_nick=${AUTHOR_NICK} author="${AUTHOR}"
+)
+

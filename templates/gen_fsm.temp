@@ -1,0 +1,2 @@
+{template, "gen_fsm.erl",       "src/{{module_name}}.erl"}.
+{template, "gen_fsm_tests.erl", "test/{{module_name}}_tests.erl"}.

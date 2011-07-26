@@ -1,0 +1,2 @@
+{template, "application.erl",       "src/{{module_name}}.erl"}.
+{template, "application_tests.erl", "test/{{module_name}}_tests.erl"}.
